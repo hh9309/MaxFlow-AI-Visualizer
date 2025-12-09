@@ -12,7 +12,7 @@ export const initializeAlgorithm = (): AlgorithmState => ({
   bottleneck: null,
   visited: new Set(),
   maxFlow: 0,
-  logs: ["Algorithm initialized. Ready to start."]
+  logs: ["算法初始化完成，准备就绪。"]
 });
 
 export const clearLabels = (nodes: Node[]): Node[] => {
@@ -48,7 +48,7 @@ export const stepAlgorithm = (
         visited: new Set([source.id]),
         pathFound: null,
         bottleneck: null,
-        logs: [...logs, "Starting labeling phase from Source (s)."]
+        logs: [...logs, "开始新一轮标号，从源点 (s) 出发。"]
       }
     };
   }
@@ -62,7 +62,7 @@ export const stepAlgorithm = (
         state: {
           ...currentState,
           phase: AlgorithmPhase.FINISHED,
-          logs: [...logs, `No more augmenting paths found. Max Flow is ${maxFlow}.`]
+          logs: [...logs, `未找到更多增广路径。算法结束，最大流为 ${maxFlow}。`]
         }
       };
     }
@@ -144,7 +144,7 @@ export const stepAlgorithm = (
                 pathFound: newPath,
                 bottleneck: newBottleneck,
                 visited: newVisited,
-                logs: [...logs, `Sink (t) labeled! Found augmenting path with capacity ${newBottleneck}.`]
+                logs: [...logs, `汇点 (t) 已标号！发现增广路径，可增广量 ${newBottleneck}。`]
             }
         };
     }
@@ -155,7 +155,7 @@ export const stepAlgorithm = (
             ...currentState,
             queue: newQueue,
             visited: newVisited,
-            logs: neighborsFound ? [...logs, `Labeled neighbors of ${uId}.`] : logs
+            logs: neighborsFound ? [...logs, `已检查节点 ${uId} 并标记了其邻居。`] : logs
         }
     };
   }
@@ -193,7 +193,7 @@ export const stepAlgorithm = (
               maxFlow: maxFlow + bottleneck,
               pathFound: null,
               bottleneck: null,
-              logs: [...logs, `Augmented flow by ${bottleneck}. Total Max Flow: ${maxFlow + bottleneck}. Clearing labels...`]
+              logs: [...logs, `已沿路径增广流量 ${bottleneck}。当前最大流: ${maxFlow + bottleneck}。清除标号，准备下一轮...`]
           }
       };
   }

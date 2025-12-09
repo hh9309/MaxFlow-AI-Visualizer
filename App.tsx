@@ -250,14 +250,16 @@ const App: React.FC = () => {
           </div>
           
           {/* Algorithm Log */}
-          <div className="bg-slate-900 text-slate-200 p-4 rounded-xl shadow-lg h-48 overflow-y-auto font-mono text-xs">
+          <div className="bg-blue-50 text-slate-700 p-4 rounded-xl shadow-inner border border-blue-200 h-48 overflow-y-auto text-xs">
             {algoState.logs.length === 0 ? (
-                <span className="text-slate-500">// 日志将显示在这里...</span>
+                <span className="text-slate-400 opacity-60 font-bold">// 日志将显示在这里...</span>
             ) : (
                 algoState.logs.map((log, i) => (
-                    <div key={i} className="mb-1 border-l-2 border-slate-700 pl-2">
-                        <span className="text-slate-500 select-none">{(i+1).toString().padStart(2, '0')} </span>
-                        {log}
+                    <div key={i} className="mb-2 border-l-4 border-blue-400 pl-3 py-1 bg-white/60 rounded-r">
+                         <div className="flex gap-3">
+                            <span className="text-blue-600 select-none font-mono font-bold pt-0.5">{(i+1).toString().padStart(2, '0')}</span>
+                            <span className="font-bold leading-relaxed tracking-wide text-slate-800 text-sm">{log}</span>
+                         </div>
                     </div>
                 ))
             )}
