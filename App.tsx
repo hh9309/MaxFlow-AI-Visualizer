@@ -17,6 +17,9 @@ const App: React.FC = () => {
   const [activeTool, setActiveTool] = useState<ToolType>('SELECT');
   const [selection, setSelection] = useState<SelectionState | null>(null);
 
+  // Refs
+  const logsEndRef = useRef<HTMLDivElement>(null);
+
   // --- Helpers ---
   const resetAlgo = useCallback(() => {
     setAlgoState(initializeAlgorithm());
@@ -39,6 +42,11 @@ const App: React.FC = () => {
       window.addEventListener('keydown', handleKeyDown);
       return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selection]);
+
+  // Auto-scroll logs
+  useEffect(() => {
+    logsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [algoState.logs]);
 
 
   // --- Graph Editing Handlers ---
@@ -263,7 +271,7 @@ const App: React.FC = () => {
                     </div>
                 ))
             )}
-            <div ref={useRef<HTMLDivElement>(el => el?.scrollIntoView({ behavior: 'smooth' }))} />
+            <div ref={logsEndRef} />
           </div>
         </div>
 
