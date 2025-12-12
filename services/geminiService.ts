@@ -1,6 +1,11 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { Graph, AIProvider } from "../types";
 
+// Helper to clean JSON string from Markdown code blocks
+const cleanJsonString = (str: string): string => {
+  return str.replace(/```json/g, '').replace(/```/g, '').trim();
+};
+
 // Helper for DeepSeek API calls
 const callDeepSeek = async (messages: any[], apiKey: string, jsonMode = false) => {
   try {
@@ -61,7 +66,11 @@ export const generateGraphScenario = async (
         responseText = await callDeepSeek(messages, apiKey, true);
     } else {
         // Gemini Logic
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+        // Use provided key or fallback to env var
+        const finalKey = apiKey || process.env.API_KEY;
+        if (!finalKey) throw new Error("未找到 Google API Key。请在设置中输入 Key 或配置环境变量。");
+
+        const ai = new GoogleGenAI({ apiKey: finalKey });
         const graphSchema: Schema = {
             type: Type.OBJECT,
             properties: {
@@ -108,7 +117,8 @@ export const generateGraphScenario = async (
         responseText = response.text || "{}";
     }
 
-    const result = JSON.parse(responseText);
+    const cleanedJson = cleanJsonString(responseText);
+    const result = JSON.parse(cleanedJson);
 
     // Post-processing
     const nodes = result.nodes.map((n: any) => ({
@@ -163,7 +173,11 @@ export const explainStep = async (
              ];
              return await callDeepSeek(messages, apiKey);
         } else {
-             const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+             // Gemini Logic
+             const finalKey = apiKey || process.env.API_KEY;
+             if (!finalKey) throw new Error("未找到 Google API Key。");
+
+             const ai = new GoogleGenAI({ apiKey: finalKey });
              const response = await ai.models.generateContent({
                 model: 'gemini-2.5-flash',
                 contents: `${context}\n\n${prompt}`,
